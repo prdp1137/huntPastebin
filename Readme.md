@@ -5,7 +5,7 @@ HuntPastebin is a command-line tool that allows you to search for leaked informa
 
 1. Clone the repository:
 ```shell
-git clone https://github.com/your-username/huntPastebin.git
+git clone https://github.com/pr0d33p/huntPastebin.git
 ```
 2. Navigate to the project directory:
 ```shell
@@ -27,3 +27,4 @@ python huntPastebin.py -e foo@bar.com
 ## Output
 The tool will display the URLs of the search results directly in the console.
 
+### ChatGPT was used to generate readme
