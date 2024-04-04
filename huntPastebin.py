@@ -1,13 +1,13 @@
 import argparse
 import requests
 
-def scrape(url, dir):
+def scrape(url):
     print("Searching pastebin...")
     response = requests.get(url)
     response.raise_for_status()
 
     data = response.json()
-    ids = [entry['id'] for entry in data['data']]
+    ids = [entry['id'] for entry in data]
     urls = [f"https://pastebin.com/{id}" for id in ids]
 
     print("Task completed. Output URLs:")
@@ -31,14 +31,14 @@ if not any(vars(args).values()):
 if args.general:
     dir = f"general/{args.general}"
     url = f"https://psbdmp.ws/api/search/{args.general}"
-    scrape(url, dir)
+    scrape(url)
 
 elif args.email:
     dir = f"email/{args.email}"
     url = f"https://psbdmp.ws/api/search/email/{args.email}"
-    scrape(url, dir)
+    scrape(url)
 
 elif args.domain:
     dir = f"domain/{args.domain}"
     url = f"https://psbdmp.ws/api/search/domain/{args.domain}"
-    scrape(url, dir)
+    scrape(url)
