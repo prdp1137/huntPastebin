@@ -44,7 +44,7 @@ python huntPastebin.py -g search_term
 
 ## Advanced Options
 
-- **Number of Threads (`-t`):** Control how many threads the tool uses for searching. Default is 20. Example:
+- **Number of Threads (`-t`):** Control how many threads the tool uses for searching. Default is 10. Example:
     ```shell
     python huntPastebin.py -d domain.com -t 20
     ```
