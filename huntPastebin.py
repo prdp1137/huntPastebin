@@ -2,6 +2,7 @@ import argparse
 import aiohttp
 import asyncio
 import os
+from tqdm.asyncio import tqdm
 
 class APIDownError(Exception):
     pass
@@ -21,14 +22,13 @@ async def fetch_and_save_content(url, file_path, session, semaphore, rate_limit)
         try:
             content_data = await fetch(session, url)
             with open(file_path, 'w', encoding='utf-8') as file:
-                file.write(content_data['content'])
-            print(f"File saved: {file_path}")  # Progress reporting
+                file.write(content_data.get('content', ''))  # Write content or empty string if missing
+            return file_path
         except APIDownError:
-            # Reraise APIDownError to stop all tasks
             raise
         except Exception as e:
             print(f"Failed to fetch content from {url}. Skipping. Error: {e}")
-        await asyncio.sleep(rate_limit)  # Apply rate limiting
+        await asyncio.sleep(rate_limit)
 
 async def scrape(url, dir_name, session, semaphore, rate_limit):
     print("Searching pastebin...")
@@ -55,12 +55,13 @@ async def scrape(url, dir_name, session, semaphore, rate_limit):
             session,
             semaphore,
             rate_limit
-        )
-        for id in ids
+        ) for id in ids
     ]
 
     try:
-        await asyncio.gather(*tasks)
+        # Progress bar setup
+        for task in tqdm.as_completed(tasks, total=len(tasks), desc="Downloading files", unit="file"):
+            await task
         # Optional: Remove directory if no files were saved
         if not any(os.path.isfile(os.path.join(dir_name, f"{id}.txt")) for id in ids):
             os.rmdir(dir_name)
